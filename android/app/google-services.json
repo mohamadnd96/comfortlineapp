@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "145770969403",
+    "firebase_url": "https://test1-8f077-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "test1-8f077",
+    "storage_bucket": "test1-8f077.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145770969403:android:1b122dc7e19e3d6d599f1e",
+        "android_client_info": {
+          "package_name": "com.hobo.comfortline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145770969403-p3ed84chlct1adb9p3vf4r19s48arpfs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5h_c4F-08S7gILeWP0V1LHYRIpdwiKU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145770969403-p3ed84chlct1adb9p3vf4r19s48arpfs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
