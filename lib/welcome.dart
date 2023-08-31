@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 import 'code.dart';
 
@@ -107,11 +108,8 @@ class _WelcomePageState extends State<WelcomePage> {
                         children: [
                           questionButton(
                             () {
-                              pushReplace(
-                                  context,
-                                  Code(
-                                    oldcode: widget.space,
-                                  ));
+                              context.goNamed('code',
+                                  queryParameters: {'oldcode': widget.space});
                             },
                             widget.space != ""
                                 ? 'You are now in the space (${widget.space}) click to change'
@@ -125,7 +123,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               onTap: () {
                                 // readData(Paths.hasResponded)
                                 //     .then((value) => print(value.value));
-                                push(context, FlowPage());
+                                context.goNamed('flow');
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(15),

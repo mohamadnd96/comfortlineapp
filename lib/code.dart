@@ -1,7 +1,3 @@
-import 'dart:ffi';
-
-import 'package:comfortline/components/qr.dart';
-import 'package:comfortline/fixedpage.dart';
 import 'package:comfortline/functions/functions.dart';
 import 'package:comfortline/globals.dart';
 import 'package:comfortline/material.dart';
@@ -10,7 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_svg/flutter_svg.dart';
-import 'welcome.dart';
+import 'package:go_router/go_router.dart';
 
 class Code extends StatefulWidget {
   String oldcode;
@@ -76,7 +72,8 @@ class _CodeState extends State<Code> {
             width: double.infinity,
             color: mainColor,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // center the comfortline logo
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // center the comfortline logo
               children: [
                 colSpace(50),
                 SvgPicture.asset(
@@ -87,7 +84,8 @@ class _CodeState extends State<Code> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 200, 15, 15), // T=200, 200 px from the top of the page
+            padding: const EdgeInsets.fromLTRB(
+                15, 200, 15, 15), // T=200, 200 px from the top of the page
             child: Column(
               children: [
                 Container(
@@ -117,7 +115,8 @@ class _CodeState extends State<Code> {
                         children: [
                           SizedBox(
                               width: 35,
-                              child: CodeInput(controller1, (x) { // x = the number of the input
+                              child: CodeInput(controller1, (x) {
+                                // x = the number of the input
                                 if (x.isEmpty) {
                                 } else {
                                   node2.requestFocus();
@@ -206,32 +205,41 @@ class _CodeState extends State<Code> {
                               () async {
                                 String code = getCode();
                                 if (code.length == 8 &&
-                                    int.tryParse(code) != null) {              // checks the format of the code
-                                  if (widget.oldcode
-                                              .toString()
-                                              .substring(0, 4) ==              // gets building code (first 4 digits) and checks if it changed 
+                                    int.tryParse(code) != null) {
+                                  // checks the format of the code
+                                  if (widget.oldcode.toString().substring(0,
+                                              4) == // gets building code (first 4 digits) and checks if it changed
                                           code.substring(0, 4) ||
-                                      widget.oldcode == "0000") {              // if we had no building (first building)
+                                      widget.oldcode == "0000") {
+                                    // if we had no building (first building)
                                     setState(() {
-                                      loading = true;                          // if it didnt change or if first building, load and do the FireBase sign up
+                                      loading =
+                                          true; // if it didnt change or if first building, load and do the FireBase sign up
                                     });
                                     checkLocationCode(code).then((value) async {
-                                      if (value != null) {                      // if space exists
-                                        if (FirebaseAuth.instance.currentUser == // if new user, sign up and subscribe to building topics
+                                      if (value != null) {
+                                        // if space exists
+                                        if (FirebaseAuth.instance
+                                                .currentUser == // if new user, sign up and subscribe to building topics
                                             null) {
                                           await signUp();
                                           await wait(2000);
                                           await newRequest(
                                               Paths.updateLocation, code);
-                                          FirebaseMessaging.instance            // topic = notification plugin from FireBase used for example if the owner wants to notify people from specific spaces
-                                              .subscribeToTopic(code);          // subscribe to SPACE
-                                          FirebaseMessaging.instance
+                                          FirebaseMessaging
+                                              .instance // topic = notification plugin from FireBase used for example if the owner wants to notify people from specific spaces
                                               .subscribeToTopic(
-                                                  code.substring(0, 4));        // subscribe to BUILDING
+                                                  code); // subscribe to SPACE
                                           FirebaseMessaging.instance
-                                              .subscribeToTopic(
-                                                  code.substring(0, 6));        // subscribe to FLOOR of building
-                                        } else {                                // if user exists but has no space, subscribe to new one
+                                              .subscribeToTopic(code.substring(
+                                                  0,
+                                                  4)); // subscribe to BUILDING
+                                          FirebaseMessaging.instance
+                                              .subscribeToTopic(code.substring(
+                                                  0,
+                                                  6)); // subscribe to FLOOR of building
+                                        } else {
+                                          // if user exists but has no space, subscribe to new one
                                           await newRequest(
                                               Paths.updateLocation, code);
                                           await readData('users')
@@ -239,7 +247,8 @@ class _CodeState extends State<Code> {
                                             if (oldspace
                                                     .child('building')
                                                     .value ==
-                                                '') {                           // '' (empty string) because this is the case you got kicked out of the building (therefor it's not 0000) <= RARE
+                                                '') {
+                                              // '' (empty string) because this is the case you got kicked out of the building (therefor it's not 0000) <= RARE
                                               FirebaseMessaging.instance
                                                   .subscribeToTopic(code);
                                               FirebaseMessaging.instance
@@ -248,7 +257,8 @@ class _CodeState extends State<Code> {
                                               FirebaseMessaging.instance
                                                   .subscribeToTopic(
                                                       code.substring(0, 6));
-                                            } else {                            // if user exists and has a space, unsubscribe from old one first, then subscribe to new one
+                                            } else {
+                                              // if user exists and has a space, unsubscribe from old one first, then subscribe to new one
                                               FirebaseMessaging.instance
                                                   .unsubscribeFromTopic(oldspace
                                                       .child('space')
@@ -282,10 +292,11 @@ class _CodeState extends State<Code> {
                                           loading = false;
                                         });
                                         // ignore: use_build_context_synchronously
-                                        pushReplace(
-                                            context, WelcomePage(space: code));
+                                        context.goNamed('welcome',
+                                            pathParameters: {'space': code});
                                         // });
-                                      } else {                                      // if space doesn't exists
+                                      } else {
+                                        // if space doesn't exists
                                         setState(() {
                                           loading = false;
                                         });
@@ -293,10 +304,12 @@ class _CodeState extends State<Code> {
                                             "The entered code does not match any space");
                                       }
                                     });
-                                  } else {                                          // else from if (line 210) => If building changed, log out
+                                  } else {
+                                    // else from if (line 210) => If building changed, log out
                                     showLogoutModal(context);
                                   }
-                                } else {                                            // if format is invalid
+                                } else {
+                                  // if format is invalid
                                   showErrorPopup(
                                       context, "The entered code is not valid");
                                 }
@@ -309,15 +322,12 @@ class _CodeState extends State<Code> {
                   ),
                 ),
                 colSpace(20),
-                appText("OR", 24, black), // OR between the 8 Digit and the QR Contrainers
+                appText("OR", 24,
+                    black), // OR between the 8 Digit and the QR Contrainers
                 colSpace(20),
                 InkWell(
                   onTap: () {
-                    push(context, QrScanner(() {
-                      Future.delayed(const Duration(milliseconds: 500)).then(
-                          (value) => showErrorPopup(context,
-                              "The QR code you are trying to scan is not valid"));
-                    }));
+                    context.goNamed('qrcode');
                   },
                   child: Container(
                     padding: const EdgeInsets.all(25),
