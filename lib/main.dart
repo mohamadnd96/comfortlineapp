@@ -2,29 +2,18 @@ import 'package:comfortline/code.dart';
 import 'package:comfortline/components/qr.dart';
 import 'package:comfortline/flowpage.dart';
 import 'package:comfortline/functions/functions.dart';
-
 import 'package:comfortline/material.dart';
 import 'package:comfortline/welcome.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:go_router/go_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // uses FireBase Core depedencie
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyAs1fs9uYPu483Hn8ErMK4e52z1akC4mck",
-      appId: "1:145770969403:web:41dc4add13b9411d599f1e",
-      messagingSenderId: "145770969403",
-      projectId: "test1-8f077")
-  );
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
-
 
 mixin FirebaseMessaging {} // unimportant (notifications)
 
