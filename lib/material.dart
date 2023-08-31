@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:comfortline/functions/functions.dart';
-import 'package:comfortline/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,26 +17,28 @@ const Color white = Colors.white;
 const Color black = Colors.black;
 
 class AppButton extends StatefulWidget {
-  Color color; // color of the button
-  void Function() action;
-  String text; // text on the button
-  bool animate; // ex : loading spinner
-  bool darkText; // default: false (at default the text in light)
-  bool loading; // show loading spinner
-  AppButton(this.color, this.action, this.text,  // <=  have to ne initialized
+  final Color color; // color of the button
+  final void Function() action;
+  final String text; // text on the button
+  final bool animate; // ex : loading spinner
+  final bool darkText; // default: false (at default the text in light)
+  final bool loading; // show loading spinner
+  const AppButton(
+      this.color, this.action, this.text, // <=  have to ne initialized
       {this.animate = false,
-      this.darkText = false,                     // <= we can initialize but not mandatory
+      this.darkText = false, // <= we can initialize but not mandatory
       this.loading = false,
       super.key});
-
   @override
   State<AppButton> createState() => _AppButtonState();
 }
 
 class _AppButtonState extends State<AppButton> {
-  double opacity = 0.0; // (transparency) may change for animations or color change
+  double opacity =
+      0.0; // (transparency) may change for animations or color change
   @override
-  void initState() {  // blends in
+  void initState() {
+    // blends in
     if (widget.animate) {
       Future.delayed(const Duration(seconds: 2)).then((value) => {
             setState(() {
@@ -64,7 +64,9 @@ class _AppButtonState extends State<AppButton> {
                       : widget.loading
                           ? 0.5
                           : 1))),
-          onPressed: widget.loading ? null : widget.action, // button can't be pressed while loading
+          onPressed: widget.loading
+              ? null
+              : widget.action, // button can't be pressed while loading
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -87,10 +89,10 @@ class _AppButtonState extends State<AppButton> {
   }
 }
 
-class Buildings extends StatefulWidget { // building in the background (going up when first logging in)
-  bool animate;
-  Buildings(this.animate, {super.key});
-
+class Buildings extends StatefulWidget {
+  // building in the background (going up when first logging in)
+  final bool animate;
+  const Buildings(this.animate, {super.key});
   @override
   State<Buildings> createState() => _BuildingsState();
 }
@@ -176,7 +178,8 @@ class _BuildingsState extends State<Buildings> with TickerProviderStateMixin {
 }
 
 // ignore: must_be_immutable
-class OptionButton extends StatelessWidget { // no animation, no spinner
+class OptionButton extends StatelessWidget {
+  // no animation, no spinner
   Color color;
   void Function() action;
   String text;
@@ -208,19 +211,19 @@ class OptionButton extends StatelessWidget { // no animation, no spinner
   }
 }
 
-class questionButton extends StatefulWidget { 
-  void Function() action;
-  Widget child;
-  String text;
-  bool fixed;
-  questionButton(this.action, this.text,
+class QuestionButton extends StatefulWidget {
+  final void Function() action;
+  final Widget child;
+  final String text;
+  final bool fixed;
+  const QuestionButton(this.action, this.text,
       {this.child = const SizedBox(), this.fixed = false, super.key});
 
   @override
-  State<questionButton> createState() => _questionButtonState();
+  State<QuestionButton> createState() => _QuestionButtonState();
 }
 
-class _questionButtonState extends State<questionButton> {
+class _QuestionButtonState extends State<QuestionButton> {
   bool expanded = false;
   bool showchild = false;
   @override
@@ -293,7 +296,8 @@ Widget widgetIf(bool condition, Widget child) {
   }
 }
 
-Future showBottomModal(context) => showModalBottomSheet( // message that shows when we submit the answer
+Future showBottomModal(context) => showModalBottomSheet(
+    // message that shows when we submit the answer
     backgroundColor: Colors.transparent,
     context: context,
     builder: ((context) {
@@ -327,7 +331,8 @@ Future showBottomModal(context) => showModalBottomSheet( // message that shows w
       );
     }));
 
-Future showLogoutModal(context) => showModalBottomSheet( // log out sheet
+Future showLogoutModal(context) => showModalBottomSheet(
+    // log out sheet
     backgroundColor: Colors.transparent,
     context: context,
     builder: ((context) {
@@ -377,20 +382,24 @@ Future showLogoutModal(context) => showModalBottomSheet( // log out sheet
 Future<dynamic> wait(int milliseconds) =>
     Future.delayed(Duration(milliseconds: milliseconds));
 
-SizedBox rowSpace(double space) => SizedBox( // add horizontal space (double) between widgets 
+SizedBox rowSpace(double space) => SizedBox(
+      // add horizontal space (double) between widgets
       width: space,
     );
-SizedBox colSpace(double space) => SizedBox( // add vertical space (double) between widgets
+SizedBox colSpace(double space) => SizedBox(
+      // add vertical space (double) between widgets
       height: space,
     );
 
-Center progressIndicator() => const Center( // spinner (for loading)
+Center progressIndicator() => const Center(
+      // spinner (for loading)
       child: CircularProgressIndicator(
         color: mainColor,
       ),
     );
 
-Text appText(String text, double fontSize, Color color, // simple text custom made
+Text appText(
+        String text, double fontSize, Color color, // simple text custom made
         {TextAlign align = TextAlign.start,
         FontWeight fontWeight = FontWeight.normal}) =>
     Text(
@@ -404,13 +413,12 @@ Text appText(String text, double fontSize, Color color, // simple text custom ma
     );
 
 class CodeInput extends StatelessWidget {
-  TextEditingController controller = TextEditingController(); // every input should have a controller
-  FocusNode node; // target node when we input a number
-  void Function(String) onChanged;
-  bool enabled;
-  CodeInput(this.controller, this.onChanged, this.node,
+  final TextEditingController controller; // every input should have a controller
+  final FocusNode node; // target node when we input a number
+  final void Function(String) onChanged;
+  final bool enabled;
+  const CodeInput(this.controller, this.onChanged, this.node,
       {this.enabled = true, super.key});
-
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -422,7 +430,8 @@ class CodeInput extends StatelessWidget {
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly
       ],
-      enabled: enabled, // for example when it's loading you cannot change the input
+      enabled:
+          enabled, // for example when it's loading you cannot change the input
       keyboardType: TextInputType.number,
       focusNode: node,
       textAlign: TextAlign.center,

@@ -9,9 +9,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class Code extends StatefulWidget {
-  String oldcode;
-  Code({this.oldcode = "0000", super.key});
-
+  final String oldcode;
+  const Code({this.oldcode = "0000", super.key});
   @override
   State<Code> createState() => _CodeState();
 }

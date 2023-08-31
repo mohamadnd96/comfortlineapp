@@ -428,11 +428,9 @@ class _FlowPageState extends State<FlowPage> {
 }
 
 class FaceButton extends StatefulWidget {
-  String img;
-  bool clicked;
-
-  FaceButton(this.img, this.clicked, {super.key});
-
+  final String img;
+  final bool clicked;
+  const FaceButton(this.img, this.clicked, {super.key});
   @override
   State<FaceButton> createState() => _FaceButtonState();
 }

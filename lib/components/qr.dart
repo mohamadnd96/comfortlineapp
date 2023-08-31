@@ -5,11 +5,10 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../code.dart';
 
 class QrScanner extends StatefulWidget {
-  void Function() onError;
-  QrScanner(this.onError, {Key? key}) : super(key: key);
-
+  final void Function() onError;
+  const QrScanner(this.onError, {Key? key}) : super(key: key);
   @override
-  _QrScannerState createState() => _QrScannerState();
+  State<QrScanner> createState() => _QrScannerState();
 }
 
 class _QrScannerState extends State<QrScanner> {

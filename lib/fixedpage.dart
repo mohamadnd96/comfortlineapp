@@ -99,7 +99,7 @@
 //                             mainColor,
 //                             fontWeight: FontWeight.w600),
 //                         colSpace(30),
-//                         questionButton(
+//                         QuestionButton(
 //                           () {},
 //                           "Do you have a fixed desk?",
 //                           child: SizedBox(
@@ -124,7 +124,7 @@
 //                           ),
 //                         ),
 //                         colSpace(15),
-//                         questionButton(
+//                         QuestionButton(
 //                           () {},
 //                           "Is it an individual office or an open space?",
 //                           child: SizedBox(
@@ -149,7 +149,7 @@
 //                           ),
 //                         ),
 //                         colSpace(15),
-//                         questionButton(
+//                         QuestionButton(
 //                           () {
 //                             pushReplace(context, Code(oldcode: data['space']));
 //                           },
