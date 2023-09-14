@@ -47,6 +47,19 @@ class _CodeState extends State<Code> {
         controller8.text;
   }
 
+  void setCode() {
+    if (widget.space.length == 8 && int.tryParse(widget.space) != null) {
+      controller1.text = widget.space[0];
+      controller2.text = widget.space[1];
+      controller3.text = widget.space[2];
+      controller4.text = widget.space[3];
+      controller5.text = widget.space[4];
+      controller6.text = widget.space[5];
+      controller7.text = widget.space[6];
+      controller8.text = widget.space[7];
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -63,6 +76,7 @@ class _CodeState extends State<Code> {
   bool loadOptions = false;
   @override
   Widget build(BuildContext context) {
+    setCode();
     return Scaffold(
       backgroundColor: backColor,
       body: SingleChildScrollView(

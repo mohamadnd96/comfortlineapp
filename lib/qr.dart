@@ -14,7 +14,10 @@ class QrScanner extends StatefulWidget {
 
 class _QrScannerState extends State<QrScanner> {
   void fillCodeQr(String result) {
-    if (result.length == 8 && int.tryParse(result) != null) {
+    const String website = 'https://test1-8f077.web.app/#/login?space=';
+    if (result.startsWith(website) &&
+        result.length == website.length + 8 &&
+        int.tryParse(result.substring(website.length)) != null) {
       controller1.text = result[0];
       controller2.text = result[1];
       controller3.text = result[2];

@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Comfortline',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
@@ -104,24 +104,28 @@ class _HomeState extends State<Home> {
   Future<bool> checkLogin() async {
     if (FirebaseAuth.instance.currentUser != null) {
       readData('users').then((value) => {
-            if (value.child('space').value != '' &&
-                value.child('space').value != null)
+            if (GoRouterState.of(context).fullPath != '/login' ||
+                GoRouterState.of(context).uri.queryParameters.toString() ==
+                    '{space: }')
               {
-                wait(2000).then((value1) => context.goNamed('welcome',
-                    extra: value.child("space").value.toString()))
-              }
-            else
-              {
-                wait(2000).then((value) => context.goNamed('login',
-                    queryParameters: {'space': ''}, extra: '0000'))
+                if (value.child('space').value != '' &&
+                    value.child('space').value != null)
+                  {
+                    wait(2000).then((value1) => context.goNamed('welcome',
+                        extra: value.child("space").value.toString()))
+                  }
+                else
+                  {
+                    wait(2000).then((value) => context.goNamed('login',
+                        queryParameters: {'space': ''}, extra: '0000'))
+                  }
               }
           });
     } else {
-      setState(() {
-        firstuse = true;
-      });
+        setState(() {
+          firstuse = true;
+        });
     }
-
     return false;
   }
 
