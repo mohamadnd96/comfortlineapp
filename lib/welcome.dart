@@ -1,10 +1,9 @@
-import 'package:comfortline/flowpage.dart';
 import 'package:comfortline/functions.dart';
 import 'package:comfortline/globals.dart';
 import 'package:comfortline/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'code.dart';
+import 'package:go_router/go_router.dart';
 
 class WelcomePage extends StatefulWidget {
   final String space;
@@ -72,11 +71,9 @@ class _WelcomePageState extends State<WelcomePage> {
                         children: [
                           QuestionButton(
                             () {
-                              pushReplace(
-                                  context,
-                                  Code(
-                                    oldcode: widget.space,
-                                  ));
+                              context.goNamed('login',
+                                  queryParameters: {'space': ''},
+                                  extra: widget.space);
                             },
                             widget.space != ""
                                 ? 'You are now in the space (${widget.space}) click to change'
@@ -88,9 +85,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                             child: InkWell(
                               onTap: () {
-                                // readData(Paths.hasResponded)
-                                //     .then((value) => print(value.value));
-                                push(context, const FlowPage());
+                                context.pushNamed('flow');
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(15),

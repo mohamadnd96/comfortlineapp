@@ -1,25 +1,29 @@
 import 'package:comfortline/code.dart';
+import 'package:comfortline/flowpage.dart';
 import 'package:comfortline/functions.dart';
 import 'package:comfortline/material.dart';
+import 'package:comfortline/qr.dart';
 import 'package:comfortline/welcome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if(kIsWeb) {
-    await Firebase.initializeApp(options: const FirebaseOptions(
-    apiKey: "AIzaSyAs1fs9uYPu483Hn8ErMK4e52z1akC4mck",
-    authDomain: "test1-8f077.firebaseapp.com",
-    databaseURL: "https://test1-8f077-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "test1-8f077",
-    storageBucket: "test1-8f077.appspot.com",
-    messagingSenderId: "145770969403",
-    appId: "1:145770969403:web:41dc4add13b9411d599f1e",
-    measurementId: "G-918D3N6JPF"
-    ));
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: "AIzaSyAs1fs9uYPu483Hn8ErMK4e52z1akC4mck",
+            authDomain: "test1-8f077.firebaseapp.com",
+            databaseURL:
+                "https://test1-8f077-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "test1-8f077",
+            storageBucket: "test1-8f077.appspot.com",
+            messagingSenderId: "145770969403",
+            appId: "1:145770969403:web:e405bf809bcc4424599f1e",
+            measurementId: "G-CNV2HL7JS2"));
   } else {
     await Firebase.initializeApp();
   }
@@ -28,19 +32,54 @@ void main() async {
 
 mixin FirebaseMessaging {}
 
+final GoRouter _router = GoRouter(initialLocation: '/', routes: <RouteBase>[
+  GoRoute(
+      name: 'home',
+      path: '/',
+      builder: (context, state) => const Home(),
+      routes: [
+        GoRoute(
+            name: 'login',
+            path: 'login',
+            builder: (context, state) => Code(
+                space: state.uri.queryParameters['space']!,
+                oldcode: state.extra.toString()),
+            routes: [
+              GoRoute(
+                name: 'qrcode',
+                path: 'scan',
+                builder: (context, state) => QrScanner(() {
+                  Future.delayed(const Duration(milliseconds: 500)).then(
+                      (value) => showErrorPopup(context,
+                          "The QR code you are trying to scan is not valid"));
+                }),
+              )
+            ]),
+        GoRoute(
+            name: 'welcome',
+            path: 'welcome',
+            builder: (context, state) =>
+                WelcomePage(space: state.extra.toString())),
+        GoRoute(
+            name: 'flow',
+            path: 'vote',
+            builder: (context, state) => const FlowPage())
+      ]),
+]);
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const Home());
+        routerConfig: _router);
   }
 }
 
@@ -68,11 +107,14 @@ class _HomeState extends State<Home> {
             if (value.child('space').value != '' &&
                 value.child('space').value != null)
               {
-                wait(2000).then((value1) => pushReplace(context,
-                    WelcomePage(space: value.child('space').value.toString())))
+                wait(2000).then((value1) => context.goNamed('welcome',
+                    extra: value.child("space").value.toString()))
               }
             else
-              {wait(2000).then((value) => pushReplace(context, const Code()))}
+              {
+                wait(2000).then((value) => context.goNamed('login',
+                    queryParameters: {'space': ''}, extra: '0000'))
+              }
           });
     } else {
       setState(() {
@@ -114,13 +156,12 @@ class _HomeState extends State<Home> {
                           yellowColor,
                           () async {
                             animate = false;
-                            // signUp().then((value) {
                             setState(() {
                               loading = true;
                               firstuse = loading = false;
                             });
-                            pushReplace(context, const Code());
-                            // });
+                            context.goNamed('login',
+                                queryParameters: {'space': ''}, extra: '0000');
                           },
                           "Continue",
                           animate: true,

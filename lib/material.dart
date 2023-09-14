@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'package:comfortline/functions.dart';
-import 'package:comfortline/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 const Color yellowColor = Color.fromRGBO(255, 200, 0, 1);
 const Color mainColor = Color.fromRGBO(55, 90, 100, 1);
@@ -365,7 +364,9 @@ Future showLogoutModal(context) => showModalBottomSheet(
               child: AppButton(yellowColor, () {
                 Navigator.of(context).pop();
                 FirebaseAuth.instance.signOut();
-                pushReplace(context, const Home());
+                context.goNamed('login',
+                  queryParameters: {'space': ''},
+                  extra: '0000');
               }, "Sign out"),
             )
           ],

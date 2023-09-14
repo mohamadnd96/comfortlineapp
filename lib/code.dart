@@ -1,4 +1,3 @@
-import 'package:comfortline/qr.dart';
 import 'package:comfortline/functions.dart';
 import 'package:comfortline/globals.dart';
 import 'package:comfortline/material.dart';
@@ -6,11 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'welcome.dart';
+import 'package:go_router/go_router.dart';
 
 class Code extends StatefulWidget {
+  final String space;
   final String oldcode;
-  const Code({this.oldcode = "0000", super.key});
+  const Code({super.key, required this.oldcode, required this.space});
 
   @override
   State<Code> createState() => _CodeState();
@@ -278,9 +278,7 @@ class _CodeState extends State<Code> {
                                           loading = false;
                                         });
                                         // ignore: use_build_context_synchronously
-                                        pushReplace(
-                                            context, WelcomePage(space: code));
-                                        // });
+                                        context.goNamed('welcome', extra: code);
                                       } else {
                                         setState(() {
                                           loading = false;
@@ -309,11 +307,7 @@ class _CodeState extends State<Code> {
                 colSpace(20),
                 InkWell(
                   onTap: () {
-                    push(context, QrScanner(() {
-                      Future.delayed(const Duration(milliseconds: 500)).then(
-                          (value) => showErrorPopup(context,
-                              "The QR code you are trying to scan is not valid"));
-                    }));
+                    context.pushNamed('qrcode');
                   },
                   child: Container(
                     padding: const EdgeInsets.all(25),

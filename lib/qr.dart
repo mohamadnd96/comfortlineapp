@@ -1,5 +1,6 @@
 import 'package:comfortline/functions.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../code.dart';
 
@@ -35,9 +36,13 @@ class _QrScannerState extends State<QrScanner> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.first.then((scanData) {
-      fillCodeQr(scanData.code.toString());
-    });
+    if (controller.hasPermissions) {
+      controller.scannedDataStream.first.then((scanData) {
+        fillCodeQr(scanData.code.toString());
+      });
+    } else {
+      context.pop();
+    }
   }
 
   @override
