@@ -3,6 +3,7 @@ import 'package:comfortline/globals.dart';
 import 'package:comfortline/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -230,64 +231,67 @@ class _CodeState extends State<Code> {
                                         if (FirebaseAuth.instance.currentUser ==
                                             null) {
                                           await signUp();
-                                          await wait(2000);
-                                          await newRequest(
+                                            await newRequest(
                                               Paths.updateLocation, code);
-                                          FirebaseMessaging.instance
-                                              .subscribeToTopic(code);
-                                          FirebaseMessaging.instance
-                                              .subscribeToTopic(
-                                                  code.substring(0, 4));
-                                          FirebaseMessaging.instance
-                                              .subscribeToTopic(
-                                                  code.substring(0, 6));
+                                          if (!kIsWeb) {
+                                            FirebaseMessaging.instance
+                                                .subscribeToTopic(code);
+                                            FirebaseMessaging.instance
+                                                .subscribeToTopic(
+                                                    code.substring(0, 4));
+                                            FirebaseMessaging.instance
+                                                .subscribeToTopic(
+                                                    code.substring(0, 6));
+                                          }
                                         } else {
-                                          await newRequest(
-                                              Paths.updateLocation, code);
-                                          await readData('users')
-                                              .then((oldspace) {
-                                            if (oldspace
-                                                    .child('building')
-                                                    .value ==
-                                                '') {
-                                              FirebaseMessaging.instance
-                                                  .subscribeToTopic(code);
-                                              FirebaseMessaging.instance
-                                                  .subscribeToTopic(
-                                                      code.substring(0, 4));
-                                              FirebaseMessaging.instance
-                                                  .subscribeToTopic(
-                                                      code.substring(0, 6));
-                                            } else {
-                                              FirebaseMessaging.instance
-                                                  .unsubscribeFromTopic(oldspace
-                                                      .child('space')
-                                                      .value
-                                                      .toString());
-                                              FirebaseMessaging.instance
-                                                  .unsubscribeFromTopic(oldspace
-                                                      .child('space')
-                                                      .value
-                                                      .toString()
-                                                      .substring(0, 4));
-                                              FirebaseMessaging.instance
-                                                  .unsubscribeFromTopic(oldspace
-                                                      .child('space')
-                                                      .value
-                                                      .toString()
-                                                      .substring(0, 6));
-                                              FirebaseMessaging.instance
-                                                  .subscribeToTopic(code);
-                                              FirebaseMessaging.instance
-                                                  .subscribeToTopic(
-                                                      code.substring(0, 4));
-                                              FirebaseMessaging.instance
-                                                  .subscribeToTopic(
-                                                      code.substring(0, 6));
-                                            }
-                                          });
+                                            await newRequest(
+                                                Paths.updateLocation, code);
+                                            if (!kIsWeb) {
+                                            await readData('users')
+                                                .then((oldspace) {
+                                              if (oldspace
+                                                      .child('building')
+                                                      .value ==
+                                                  '') {
+                                                FirebaseMessaging.instance
+                                                    .subscribeToTopic(code);
+                                                FirebaseMessaging.instance
+                                                    .subscribeToTopic(
+                                                        code.substring(0, 4));
+                                                FirebaseMessaging.instance
+                                                    .subscribeToTopic(
+                                                        code.substring(0, 6));
+                                              } else {
+                                                FirebaseMessaging.instance
+                                                    .unsubscribeFromTopic(oldspace
+                                                        .child('space')
+                                                        .value
+                                                        .toString());
+                                                FirebaseMessaging.instance
+                                                    .unsubscribeFromTopic(oldspace
+                                                        .child('space')
+                                                        .value
+                                                        .toString()
+                                                        .substring(0, 4));
+                                                FirebaseMessaging.instance
+                                                    .unsubscribeFromTopic(oldspace
+                                                        .child('space')
+                                                        .value
+                                                        .toString()
+                                                        .substring(0, 6));
+                                                FirebaseMessaging.instance
+                                                    .subscribeToTopic(code);
+                                                FirebaseMessaging.instance
+                                                    .subscribeToTopic(
+                                                        code.substring(0, 4));
+                                                FirebaseMessaging.instance
+                                                    .subscribeToTopic(
+                                                        code.substring(0, 6));
+                                              }
+                                            });
+                                          }
                                         }
-                                        await wait(4000);
+                                        if(kIsWeb) await wait(4000);
                                         setState(() {
                                           loading = false;
                                         });

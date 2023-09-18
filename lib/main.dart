@@ -24,7 +24,7 @@ void main() async {
             messagingSenderId: "145770969403",
             appId: "1:145770969403:web:e405bf809bcc4424599f1e",
             measurementId: "G-CNV2HL7JS2"));
-  } else {
+  } else {  
     await Firebase.initializeApp();
   }
   runApp(const MyApp());
@@ -111,20 +111,28 @@ class _HomeState extends State<Home> {
                 if (value.child('space').value != '' &&
                     value.child('space').value != null)
                   {
-                    wait(2000).then((value1) => context.goNamed('welcome',
-                        extra: value.child("space").value.toString()))
+                    if (!kIsWeb)
+                      wait(2000).then((value1) => context.goNamed('welcome',
+                          extra: value.child("space").value.toString()))
+                    else
+                      context.goNamed('welcome',
+                          extra: value.child("space").value.toString())
                   }
                 else
                   {
-                    wait(2000).then((value) => context.goNamed('login',
-                        queryParameters: {'space': ''}, extra: '0000'))
+                    if (!kIsWeb)
+                      wait(2000).then((value) => context.goNamed('login',
+                          queryParameters: {'space': ''}, extra: '0000'))
+                    else
+                      context.goNamed('login',
+                          queryParameters: {'space': ''}, extra: '0000')
                   }
               }
           });
     } else {
-        setState(() {
-          firstuse = true;
-        });
+      setState(() {
+        firstuse = true;
+      });
     }
     return false;
   }

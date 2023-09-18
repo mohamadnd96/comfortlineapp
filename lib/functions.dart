@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../material.dart';
 
@@ -20,10 +21,11 @@ Future<UserCredential> signUp() async {
   UserCredential user;
   user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: '$timestamp@technicalcomfortline.hobo', password: timestamp);
-  wait(4000).then((value) {
-    FirebaseMessaging.instance.subscribeToTopic("0000");
-  });
-
+  if (!kIsWeb) {
+    wait(4000).then((value) {
+      FirebaseMessaging.instance.subscribeToTopic("0000");
+    });
+  }
   return user;
 }
 
