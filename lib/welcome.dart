@@ -69,18 +69,6 @@ class _WelcomePageState extends State<WelcomePage> {
                       // height: 520.0,
                       child: Column(
                         children: [
-                          QuestionButton(
-                            () {
-                              context.goNamed('login',
-                                  queryParameters: {'space': ''},
-                                  extra: widget.space);
-                            },
-                            widget.space != ""
-                                ? 'You are now in the space (${widget.space}) click to change'
-                                : "Please indicate the office number you are working in",
-                            fixed: true,
-                          ),
-                          colSpace(10),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                             child: InkWell(
@@ -99,15 +87,40 @@ class _WelcomePageState extends State<WelcomePage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SvgPicture.asset(
-                                      'images/qmark.svg',
-                                    ),
-                                    rowSpace(10),
                                     Flexible(
-                                      child: appText(
-                                          "Do you want to tell us how you find the indoor environment? ",
-                                          14,
-                                          white,
+                                      child: appText(widget.space != ""
+                                          ? 'Give feedback'
+                                          : "Please indicate the office number you are working in", 14, white,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          colSpace(10),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                            child: InkWell(
+                              onTap: () {
+                                context.goNamed('login',
+                                    queryParameters: {'space': ''},
+                                    extra: widget.space);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(15),
+                                width: double.infinity,
+                                // height: 90,
+                                decoration: BoxDecoration(
+                                    color: mainColor,
+                                    borderRadius: BorderRadius.circular(20)),
+                                alignment: Alignment.topCenter,
+                                // height: 520.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Flexible(
+                                      child: appText("Sign out", 14, white,
                                           fontWeight: FontWeight.w500),
                                     )
                                   ],
