@@ -220,9 +220,11 @@ class _CodeState extends State<Code> {
                                     int.tryParse(code) != null) {
                                   if (widget.oldcode
                                               .toString()
-                                              .substring(0, 4) ==
-                                          code.substring(0, 4) ||
-                                      widget.oldcode == "0000") {
+                                              .substring(0, 4) !=
+                                          code.substring(0, 4) &&
+                                      widget.oldcode != "0000") {
+                                    FirebaseAuth.instance.signOut();
+                                      }
                                     setState(() {
                                       loading = true;
                                     });
@@ -231,7 +233,7 @@ class _CodeState extends State<Code> {
                                         if (FirebaseAuth.instance.currentUser ==
                                             null) {
                                           await signUp();
-                                            await newRequest(
+                                          await newRequest(
                                               Paths.updateLocation, code);
                                           if (!kIsWeb) {
                                             FirebaseMessaging.instance
@@ -244,9 +246,9 @@ class _CodeState extends State<Code> {
                                                     code.substring(0, 6));
                                           }
                                         } else {
-                                            await newRequest(
-                                                Paths.updateLocation, code);
-                                            if (!kIsWeb) {
+                                          await newRequest(
+                                              Paths.updateLocation, code);
+                                          if (!kIsWeb) {
                                             await readData('users')
                                                 .then((oldspace) {
                                               if (oldspace
@@ -263,22 +265,25 @@ class _CodeState extends State<Code> {
                                                         code.substring(0, 6));
                                               } else {
                                                 FirebaseMessaging.instance
-                                                    .unsubscribeFromTopic(oldspace
-                                                        .child('space')
-                                                        .value
-                                                        .toString());
+                                                    .unsubscribeFromTopic(
+                                                        oldspace
+                                                            .child('space')
+                                                            .value
+                                                            .toString());
                                                 FirebaseMessaging.instance
-                                                    .unsubscribeFromTopic(oldspace
-                                                        .child('space')
-                                                        .value
-                                                        .toString()
-                                                        .substring(0, 4));
+                                                    .unsubscribeFromTopic(
+                                                        oldspace
+                                                            .child('space')
+                                                            .value
+                                                            .toString()
+                                                            .substring(0, 4));
                                                 FirebaseMessaging.instance
-                                                    .unsubscribeFromTopic(oldspace
-                                                        .child('space')
-                                                        .value
-                                                        .toString()
-                                                        .substring(0, 6));
+                                                    .unsubscribeFromTopic(
+                                                        oldspace
+                                                            .child('space')
+                                                            .value
+                                                            .toString()
+                                                            .substring(0, 6));
                                                 FirebaseMessaging.instance
                                                     .subscribeToTopic(code);
                                                 FirebaseMessaging.instance
@@ -291,7 +296,7 @@ class _CodeState extends State<Code> {
                                             });
                                           }
                                         }
-                                        if(kIsWeb) await wait(4000);
+                                        if (kIsWeb) await wait(4000);
                                         setState(() {
                                           loading = false;
                                         });
@@ -305,9 +310,6 @@ class _CodeState extends State<Code> {
                                             "The entered code does not match any space");
                                       }
                                     });
-                                  } else {
-                                    showLogoutModal(context);
-                                  }
                                 } else {
                                   showErrorPopup(
                                       context, "The entered code is not valid");
